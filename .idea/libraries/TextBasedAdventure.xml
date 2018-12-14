@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="TextBasedAdventure">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/TextBasedAdventure.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
