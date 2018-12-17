@@ -8,20 +8,26 @@ public class Player {
     public int xLoc;
     public int yLoc;
     public int hp;
+    public int atk;
     public boolean poison;
 
-    public Player (String name, int xLoc, int yLoc, int hp, boolean poison)
+    public Player (String name, int xLoc, int yLoc, int hp, int atk, boolean poison)
     {
         this.name = name;
         this.xLoc = xLoc;
         this.yLoc = yLoc;
         this.hp = hp;
+        this.atk = atk;
         this.poison = poison;
     }
 
-    public static String getName(String name)
+    public Player (int xLoc, int yLoc, int hp, int atk, boolean poison)
     {
-        return name;
+        this.xLoc = xLoc;
+        this.yLoc = yLoc;
+        this.hp = hp;
+        this.atk = atk;
+        this.poison = poison;
     }
 
     public int hp(int heal)
@@ -29,13 +35,17 @@ public class Player {
         return hp += heal;
     }
 
-    public int isPoison(boolean poison, int toxic)
+    public void isPoison(boolean poison)
     {
         if (poison)
         {
-            return toxic;
+            hp -= 5;
         }
-        return 0;
+    }
+
+    public int atk(int str)
+    {
+        return atk += str;
     }
 
     public int getxLoc() {

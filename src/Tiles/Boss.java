@@ -3,12 +3,12 @@ package Tiles;
 import Game.Runner;
 import Player.Player;
 
-public class WinningTile extends Tile
+public class Boss extends Tile
 {
 
-    public WinningTile(int x, int y) {
+    public Boss(int x, int y)
+    {
         super(x, y);
-
     }
 
     /**
@@ -25,7 +25,8 @@ public class WinningTile extends Tile
     }
 
     @Override
-    public String toString() {
-        return "W";
+    public String toString()
+    {
+        return "Ｂ ";
     }
 }

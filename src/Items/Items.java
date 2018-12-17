@@ -6,5 +6,5 @@ public interface Items
 {
     String getName();
 
-    void eat(Player x);
+    void use(Player x);
 }

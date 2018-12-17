@@ -3,7 +3,8 @@ package Board;
 import Tiles.Tile;
 
 public class Board {
-    Tile[][] board;
+
+    private Tile[][] board;
 
     public Board(Tile[][] board)
     {
@@ -11,7 +12,7 @@ public class Board {
     }
 
     public void print(){
-        String row = "";
+        String row;
         for (int i = 0; i < board.length; i++)
         {
             row = "";

@@ -18,7 +18,6 @@ public class Tile {
      */
     public void enterTile(Player x)
     {
-        System.out.println("You enter a plain old room");
         occupant = x;
         x.setxLoc(this.xLoc);
         x.setyLoc(this.yLoc);
@@ -37,8 +36,8 @@ public class Tile {
     public String toString() {
         if (occupant == null)
         {
-            return "R";
+            return "█　";
         }
-        return "X";
+        return "Ｘ ";
     }
 }
