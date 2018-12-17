@@ -32,7 +32,18 @@ public class Trap extends Tile
             System.out.println("Unlucky, you thought this was a teleport tile?");
             System.out.println("Your stats will drop if you enter (N) to do nothing.");
             System.out.println("Or you can enter (Y) to try to escape. However, an unsuccessful attempt will result in a bigger stats drop.");
-            if (input().equals("y"))
+            Scanner in = new Scanner(System.in);
+            String input = in.nextLine();
+            if (!input.equals("y") && !input.equals("n"))
+            {
+                while (!input.equals("y") && !input.equals("n"))
+                {
+                    System.out.println("Please answer Y or N.");
+                    in = new Scanner(System.in);
+                    input = in.nextLine();
+                }
+            }
+            if (input.equals("y"))
             {
                 fate = (int)(Math.random() * 100);
                 if (fate == 0)
@@ -45,7 +56,7 @@ public class Trap extends Tile
                     x.hp(-10);
                 }
             }
-            else
+            if (input.equals("n"))
             {
                 x.hp(-5);
             }

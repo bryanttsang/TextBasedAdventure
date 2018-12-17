@@ -3,8 +3,8 @@ package Tiles;
 import Player.Player;
 
 public class Tile {
-    Player occupant;
-    int xLoc,yLoc;
+    public Player occupant;
+    public int xLoc,yLoc;
 
     public Tile(int x, int y)
     {

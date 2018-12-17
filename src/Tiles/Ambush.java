@@ -15,7 +15,7 @@ public class Ambush extends Tile
     {
         System.out.println("Ambush!");
         x.hp(-20);
-        System.out.println("You gained battle experience! Attack +20");
+        System.out.println("You got hurt but you gained battle experience! | hp -20 | atk +20");
         x.atk(20);
     }
 

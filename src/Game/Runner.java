@@ -3,6 +3,7 @@ package Game;
 import Player.Player;
 import Tiles.*;
 import Board.Board;
+import Tiles.ItemTiles.HoeTile;
 
 import java.util.Scanner;
 
@@ -99,6 +100,21 @@ public class Runner {
         {
             newTile();
             map[x][y] = new Item(x, y);
+        }
+        for (int i = 0; i < map.length; i++)
+        {
+            for (int ii = 0; ii < map[i].length; ii++)
+            {
+                if (map[i][ii].toString().equals("？ "))
+                {
+                    int item = (int)(Math.random() * 100);
+                    if (item < 5)
+                    {
+                        map[i][ii] = new HoeTile(i, ii);
+                    }
+                    //map[i][ii]
+                }
+            }
         }
 
         //setup player1
