@@ -22,7 +22,7 @@ public class Item extends Tile
     {
         occupant = x;
         x.setxLoc(this.xLoc);
-        x.setyLoc(this.yLoc);;
+        x.setyLoc(this.yLoc);
     }
 
     public void leaveTile(Player x)

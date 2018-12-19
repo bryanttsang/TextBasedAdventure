@@ -8,9 +8,16 @@ import java.util.Scanner;
 
 public class HoeTile extends Tile
 {
+
+    private Hoe hoe = new Hoe();
+
+    private String contain;
+
     public HoeTile(int x, int y)
     {
         super(x, y);
+        this.hoe = hoe;
+        this.contain = "？ ";
     }
 
     @Override
@@ -33,12 +40,29 @@ public class HoeTile extends Tile
         }
         if (input.equals("y"))
         {
-            System.out.println("You equipped hoe.");
+            System.out.println("You equipped the hoe.");
             System.out.println("atk +50");
-            //Hoe.use(x);
+            this.hoe.use(x);
         }
-
+        if (input.equals("n"))
+        {
+            System.out.println("You left the hoe.");
+        }
     }
 
+    @Override
+    public void leaveTile(Player x)
+    {
+        occupant = null;
+    }
 
+    @Override
+    public String toString()
+    {
+        if (occupant == null)
+        {
+            return contain;
+        }
+        return "Ｘ ";
+    }
 }

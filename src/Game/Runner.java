@@ -3,7 +3,7 @@ package Game;
 import Player.Player;
 import Tiles.*;
 import Board.Board;
-import Tiles.ItemTiles.HoeTile;
+import Tiles.ItemTiles.*;
 
 import java.util.Scanner;
 
@@ -12,15 +12,15 @@ public class Runner {
     private static int x = (int)(Math.random() * 6) + 5;
     private static int y = (int)(Math.random() * 6) + 5;
 
-    private static Tile[][] map = new Tile[x][y];
+    private static Tile[][] map = new Tile[y][x];
 
     public static int randomX()
     {
-        return (int)(Math.random() * map.length);
+        return (int)(Math.random() * map[0].length);
     }
     public static int randomY()
     {
-        return (int)(Math.random() * map[0].length);
+        return (int)(Math.random() * map.length);
     }
 
     private static void randomXY()
@@ -32,9 +32,9 @@ public class Runner {
     private static void newTile()
     {
         randomXY();
-        if (map[x][y] != null)
+        if (map[y][x] != null)
         {
-            while (map[x][y] != null)
+            while (map[y][x] != null)
             {
                 randomXY();
             }
@@ -45,16 +45,15 @@ public class Runner {
 
     public static void main(String[] sendHelp)
     {
-
         //random boss tile
         randomXY();
-        map[x][y] = new Boss(x, y);
+        map[y][x] = new Boss(x, y);
 
         //random teleport tiles n times
         int n = 0;
         for (int i = 0; i < map.length * map[0].length; i++)
         {
-            //5% item spawn rate
+            //5% teleport tile spawn rate
             int r = (int)(Math.random() * 100);
             if (r < 5)
             {
@@ -64,7 +63,7 @@ public class Runner {
         for (; n > 0; n--)
         {
             newTile();
-            map[x][y] = new Teleport(x, y);
+            map[y][x] = new Teleport(x, y);
         }
 
         //random trap tiles n times
@@ -81,84 +80,107 @@ public class Runner {
         for (; n > 0; n--)
         {
             newTile();
-            map[x][y] = new Trap(x, y);
+            map[y][x] = new Trap(x, y);
         }
-
 
         //random item tiles n times
         n = 0;
         for (int i = 0; i < map.length * map[0].length; i++)
         {
-            //15% item spawn rate
+            //15% item tile spawn rate
             int r = (int)(Math.random() * 100);
             if (r < 15)
             {
                 n++;
             }
         }
+        int r;
         for (; n > 0; n--)
         {
             newTile();
-            map[x][y] = new Item(x, y);
-        }
-        for (int i = 0; i < map.length; i++)
-        {
-            for (int ii = 0; ii < map[i].length; ii++)
-            {
-                if (map[i][ii].toString().equals("？ "))
-                {
-                    int item = (int)(Math.random() * 100);
-                    if (item < 5)
-                    {
-                        map[i][ii] = new HoeTile(i, ii);
-                    }
-                    //map[i][ii]
-                }
-            }
+            r = (int)(Math.random() * 15);
+            //6.667% hoe spawn rate
+            if (r == 0) { map[y][x] = new HoeTile(x, y); }
+            //13.333% heart spawn rate
+            if (r == 1 || r == 2) { map[y][x] = new HeartTile(x, y); }
+            //20.000% potion spawn rate
+            if (r == 3 || r == 4 || r == 5) { map[y][x] = new PotionTile(x, y); }
+            //26.667% berry spawn rate
+            if (r == 6 || r == 7 || r == 8 || r == 9) { map[y][x] = new BerryTile(x, y); }
+            //33.333% spork spawn rate
+            if (r == 10 || r == 11 || r == 12 || r == 13 || r == 14) { map[y][x] = new SporkTile(x, y); }
         }
 
         //setup player1
-        System.out.println("Thanks for downloading my game! What's your name?");
+        System.out.println("Thanks for downloading my game! What's your name? (You may enter nothing to play anonymously.)");
         Scanner in = new Scanner(System.in);
         String input = in.nextLine().toLowerCase().trim();
         String name = input;
-        System.out.println("And your gender? (M/F)");
+        newTile();
+        int xLoc = x;
+        int yLoc = y;
+        Player player1;
+        if (name.equals(""))
+        {
+            player1 = new Player(xLoc, yLoc, 100, 0, false);
+        }
+        else
+        {
+            player1 = new Player(name, xLoc, yLoc, 100, 0, false);
+        }
+        System.out.println("And your gender? (M/F) Enter nothing for others.");
         in = new Scanner(System.in);
         input = in.nextLine().toLowerCase().trim();
         String gender = input;
-        if (!input.equals("m") && !input.equals("f"))
+        if (!gender.equals("m") && !gender.equals("f") && !gender.equals(""))
         {
-            while (!input.equals("m") && !input.equals("f"))
+            while (!gender.equals("m") && !gender.equals("f") && !gender.equals(""))
             {
-                System.out.println("Please choose M or F");
+                System.out.println("Please choose M/F or enter nothing.");
                 in = new Scanner(System.in);
                 input = in.nextLine().toLowerCase().trim();
                 gender = input;
             }
         }
-        if (gender.equals("m"))
+        if (gender.equals("m") && name.equals(""))
         {
             System.out.println("Once upon a time, when the world's unluckiest man was just trying to live his life,");
-            System.out.println("he died and was reborn onto a game board. His name was " + name + ".");
+            System.out.println("he died and was reborn onto a game board.");
         }
-        else if (gender.equals("f"))
+        if (gender.equals("m") && !name.equals(""))
+        {
+            System.out.println("Once upon a time, when the world's unluckiest man was just trying to live his life,");
+            System.out.println("he died and was reborn onto a game board. His name was " + player1.getName() + ".");
+        }
+        if (gender.equals("f") && name.equals(""))
         {
             System.out.println("Once upon a time, when the world's unluckiest woman was just trying to live her life,");
-            System.out.println("she died and was reborn onto a game board. Her name was " + name + ".");
+            System.out.println("she died and was reborn onto a game board.");
         }
-        newTile();
-        int xLoc = x;
-        int yLoc = y;
-        Player player1 = new Player(name, xLoc, yLoc, 100, 10, false);
+        if (gender.equals("f") && !name.equals(""))
+        {
+            System.out.println("Once upon a time, when the world's unluckiest woman was just trying to live her life,");
+            System.out.println("she died and was reborn onto a game board. Her name was " + player1.getName() + ".");
+        }
+        if (gender.equals("") && name.equals(""))
+        {
+            System.out.println("Once upon a time, when the world's unluckiest person was just trying to live that person's life,");
+            System.out.println("that person died and was reborn onto a game board.");
+        }
+        if (gender.equals("") && !name.equals(""))
+        {
+            System.out.println("Once upon a time, when the world's unluckiest person was just trying to live that person's life,");
+            System.out.println("that person died and was reborn onto a game board. That person's name was " + player1.getName() + ".");
+        }
 
         //fill rest of map
-        for (x = 0; x < map.length; x++)
+        for (y = 0; y < map.length; y++)
         {
-            for (y = 0; y < map[x].length; y++)
+            for (x = 0; x < map[y].length; x++)
             {
-                if (map[x][y] == null)
+                if (map[y][x] == null)
                 {
-                    map[x][y] = new Tile(x,y);
+                    map[y][x] = new Tile(x, y);
                 }
             }
         }
@@ -167,27 +189,31 @@ public class Runner {
         Board Board = new Board(map);
 
         //player enters board
-        map[xLoc][yLoc].enterTile(player1);
+        map[yLoc][xLoc].enterTile(player1);
 
-
+        //gameplay
+        int turn = 1;
+        Board.print();
+        System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
+        System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
+        System.out.println("Where would you like to move? (Choose W/A/S/D)");
         while(gameOn)
         {
-            if (player1.getxLoc() == x && player1.getyLoc() == y)
-            {
-                System.out.println("You found the boss tile! Ten points for Gryffindor.");
-                Runner.gameOff();
-                break;
-            }
-            Board.print();
-            System.out.println("Where would you like to move? (Choose W, A, S, D)");
             String move = in.nextLine();
             if(validMove(move, player1, map))
             {
-                System.out.println("Your coordinates: row = " + player1.getxLoc() + " col = " + player1.getyLoc());
+                turn++;
+                Board.print();
+                System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
+                System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
+                System.out.println("Where would you like to move? (Choose W/A/S/D)");
             }
-            else {
-                System.out.println("Please choose a valid move.");
+            else
+            {
+                System.out.println("Please choose a valid move");
             }
+            //Runner.gameOff();
+            //break;
         }
         in.close();
     }
@@ -195,19 +221,41 @@ public class Runner {
     /**
      * Checks that the movement chosen is within the valid game map.
      * @param move the move chosen
-     * @param p person moving
+     * @param player person moving
      * @param map the 2D array of tiles
      * @return
      */
-    public static boolean validMove(String move, Player p, Tile[][] map)
+    private static boolean validMove(String move, Player player, Tile[][] map)
     {
         move = move.toLowerCase().trim();
         switch (move) {
             case "w":
-                if (p.getxLoc() > 0)
+                if (player.getyLoc() > 0)
                 {
-                    map[p.getxLoc()][p.getyLoc()].leaveTile(p);
-                    map[p.getxLoc()-1][p.getyLoc()].enterTile(p);
+                    map[player.getyLoc()][player.getxLoc()].leaveTile(player);
+                    map[player.getyLoc() - 1][player.getxLoc()].enterTile(player);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            case "a":
+                if (player.getxLoc() > 0)
+                {
+                    map[player.getyLoc()][player.getxLoc()].leaveTile(player);
+                    map[player.getyLoc()][player.getxLoc() - 1].enterTile(player);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            case "s":
+                if (player.getyLoc() < map.length - 1)
+                {
+                    map[player.getyLoc()][player.getxLoc()].leaveTile(player);
+                    map[player.getyLoc() + 1][player.getxLoc()].enterTile(player);
                     return true;
                 }
                 else
@@ -215,34 +263,10 @@ public class Runner {
                     return false;
                 }
             case "d":
-                if (p.getyLoc()< map[p.getyLoc()].length -1)
+                if (player.getxLoc() < map[0].length - 1)
                 {
-                    map[p.getxLoc()][p.getyLoc()].leaveTile(p);
-                    map[p.getxLoc()][p.getyLoc() + 1].enterTile(p);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            case "s":
-                if (p.getxLoc() < map.length - 1)
-                {
-                    map[p.getxLoc()][p.getyLoc()].leaveTile(p);
-                    map[p.getxLoc()+1][p.getyLoc()].enterTile(p);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            case "a":
-                if (p.getyLoc() > 0)
-                {
-                    map[p.getxLoc()][p.getyLoc()].leaveTile(p);
-                    map[p.getxLoc()][p.getyLoc()-1].enterTile(p);
+                    map[player.getyLoc()][player.getxLoc()].leaveTile(player);
+                    map[player.getyLoc()][player.getxLoc() + 1].enterTile(player);
                     return true;
                 }
                 else
@@ -251,10 +275,10 @@ public class Runner {
                 }
             default:
                 break;
-
         }
-        return true;
+        return false;
     }
+
     public static void gameOff()
     {
         gameOn = false;

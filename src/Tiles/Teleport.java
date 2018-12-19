@@ -7,9 +7,13 @@ import java.util.Scanner;
 
 public class Teleport extends Tile
 {
+
+    private String contain;
+
     public Teleport(int x, int y)
     {
         super(x, y);
+        this.contain = "Ｔ ";
     }
 
     /**
@@ -39,7 +43,7 @@ public class Teleport extends Tile
         }
         if (input.toLowerCase().trim().equals("y"))
         {
-            System.out.println("Where would you like to input? Enter C for a coordinate or R for random.");
+            System.out.println("Where would you like to go? Enter C for a coordinate or R for random.");
             in = new Scanner(System.in);
             input = in.nextLine();
             if (!input.toLowerCase().trim().equals("c") && !input.toLowerCase().trim().equals("r"))
@@ -61,10 +65,10 @@ public class Teleport extends Tile
             {
                 System.out.println("Enter the X coordinate.");
                 in = new Scanner(System.in);
-                int xLoc = in.nextInt();
+                int xLoc = in.nextInt() - 1;
                 System.out.println("Enter the Y coordinate.");
                 in = new Scanner(System.in);
-                int yLoc = in.nextInt();
+                int yLoc = in.nextInt() - 1;
                 x.setxLoc(xLoc);
                 x.setyLoc(yLoc);
                 occupant = null;
@@ -75,6 +79,7 @@ public class Teleport extends Tile
     public void leaveTile(Player x)
     {
         occupant = null;
+        contain = "█　";
     }
 
     @Override
@@ -82,7 +87,7 @@ public class Teleport extends Tile
     {
         if (occupant == null)
         {
-            return "Ｔ ";
+            return contain;
         }
         return "Ｘ ";
     }

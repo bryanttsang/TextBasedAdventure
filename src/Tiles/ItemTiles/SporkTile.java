@@ -1,22 +1,22 @@
 package Tiles.ItemTiles;
 
-import Items.Berry;
+import Items.Spork;
 import Player.Player;
 import Tiles.Tile;
 
 import java.util.Scanner;
 
-public class BerryTile extends Tile
+public class SporkTile extends Tile
 {
 
-    private Berry berry = new Berry();
+    private Spork spork = new Spork();
 
     private String contain;
 
-    public BerryTile(int x, int y)
+    public SporkTile(int x, int y)
     {
         super(x, y);
-        this.berry = berry;
+        this.spork = spork;
         this.contain = "？ ";
     }
 
@@ -26,7 +26,7 @@ public class BerryTile extends Tile
         occupant = x;
         x.setxLoc(this.xLoc);
         x.setyLoc(this.yLoc);
-        System.out.println("You found a berry in this room. Would you like to eat it? (Y/N)");
+        System.out.println("You found a spork in this room. Would you like to equip it? (Y/N)");
         Scanner in = new Scanner(System.in);
         String input = in.nextLine().toLowerCase().trim();
         if (!input.equals("y") && !input.equals(("n")))
@@ -40,14 +40,13 @@ public class BerryTile extends Tile
         }
         if (input.equals("y"))
         {
-            System.out.println("You ate the berry.");
-            System.out.println("hp +50 | atk +20 | poisoned");
-            this.berry.use(x);
-            contain = "█　";
+            System.out.println("You equipped the spork.");
+            System.out.println("atk +1");
+            this.spork.use(x);
         }
         if (input.equals("n"))
         {
-            System.out.println("You left the berry.");
+            System.out.println("You left the spork.");
         }
     }
 

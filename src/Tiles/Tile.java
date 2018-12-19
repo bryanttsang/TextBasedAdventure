@@ -2,7 +2,8 @@ package Tiles;
 
 import Player.Player;
 
-public class Tile {
+public class Tile
+{
     public Player occupant;
     public int xLoc,yLoc;
 
@@ -33,7 +34,8 @@ public class Tile {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         if (occupant == null)
         {
             return "█　";

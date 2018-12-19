@@ -30,38 +30,42 @@ public class Player {
         this.poison = poison;
     }
 
-    public int hp(int heal)
-    {
-        return hp += heal;
-    }
+    public int hp(int heal) { return hp += heal; }
 
-    public void isPoison(boolean poison)
+    public int atk(int str) { return atk += str; }
+
+    private int isPoison = 0;
+    public void poison(boolean poison)
     {
         if (poison)
         {
-            hp -= 5;
+            hp(-5);
+            isPoison = 1;
+        }
+        if (!poison)
+        {
+            isPoison = 0;
         }
     }
 
-    public int atk(int str)
+    public String getName() { return name; }
+
+    public int getxLoc() { return xLoc; }
+    public void setxLoc(int xLoc) { this.xLoc = xLoc; }
+
+    public int getyLoc() { return yLoc; }
+    public void setyLoc(int yLoc) { this.yLoc = yLoc; }
+
+    public int getHp() { return hp; }
+
+    public int getAtk() { return atk; }
+
+    public String isPoison()
     {
-        return atk += str;
+        if (isPoison == 0)
+        {
+            return "false";
+        }
+        return "true";
     }
-
-    public int getxLoc() {
-        return xLoc;
-    }
-
-    public void setxLoc(int xLoc) {
-        this.xLoc = xLoc;
-    }
-
-    public int getyLoc() {
-        return yLoc;
-    }
-
-    public void setyLoc(int yLoc) {
-        this.yLoc = yLoc;
-    }
-
 }

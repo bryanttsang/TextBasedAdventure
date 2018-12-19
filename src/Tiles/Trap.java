@@ -7,15 +7,29 @@ import java.util.Scanner;
 public class Trap extends Tile
 {
 
+    private String contain;
+
     public Trap(int x, int y)
     {
         super(x, y);
+        this.contain = "█　";
     }
 
-    private String input()
+    private String input;
+
+    private void input()
     {
         Scanner in = new Scanner(System.in);
-        return in.nextLine().toLowerCase().trim();
+        input = in.nextLine();
+        if (!input.equals("y") && !input.equals("n"))
+        {
+            while (!input.equals("y") && !input.equals("n"))
+            {
+                System.out.println("Please answer Y or N.");
+                in = new Scanner(System.in);
+                input = in.nextLine();
+            }
+        }
     }
     /**
      * Triggers the game ending conditions.
@@ -32,17 +46,7 @@ public class Trap extends Tile
             System.out.println("Unlucky, you thought this was a teleport tile?");
             System.out.println("Your stats will drop if you enter (N) to do nothing.");
             System.out.println("Or you can enter (Y) to try to escape. However, an unsuccessful attempt will result in a bigger stats drop.");
-            Scanner in = new Scanner(System.in);
-            String input = in.nextLine();
-            if (!input.equals("y") && !input.equals("n"))
-            {
-                while (!input.equals("y") && !input.equals("n"))
-                {
-                    System.out.println("Please answer Y or N.");
-                    in = new Scanner(System.in);
-                    input = in.nextLine();
-                }
-            }
+            input();
             if (input.equals("y"))
             {
                 fate = (int)(Math.random() * 100);
@@ -52,41 +56,47 @@ public class Trap extends Tile
                 }
                 else
                 {
-                    System.out.println("Unlucky :/");
-                    x.hp(-10);
+                    System.out.println("Unlucky. | hp -50");
+                    x.hp(-50);
                 }
             }
             if (input.equals("n"))
             {
-                x.hp(-5);
+                System.out.println("You fell into the trap. | hp -10");
+                x.hp(-10);
+            }
+        }
+        if (fate == 3)
+        {
+            System.out.println("Do you like traps? (Y/N)");
+            input();
+            if (input.equals("n"))
+            {
+                System.out.println("Unlucky. | hp -100 | atk -30 | poisoned");
+                x.hp(-100);
+                x.atk(-30);
+                x.poison(true);
+                x.isPoison();
+            }
+            else
+            {
+                System.out.println("Lucky~ | hp +50 | atk +25 | unpoisoned");
+                x.hp(50);
+                x.atk(25);
+                x.poison(false);
+                x.isPoison();
             }
         }
         if (fate == 4)
         {
-            System.out.println("Do you like traps? (Y/N)");
-            if (input().equals("n"))
-            {
-                x.hp(-10);
-                x.atk(-10);
-                x.isPoison(true);
-            }
-            else
-            {
-                System.out.println("Good...  hp +10  atk +10  poison recovery");
-                x.hp(10);
-                x.atk(10);
-                x.isPoison(false);
-            }
-        }
-        else
-        {
-            System.out.println("This trap isn't even functioning...");
+            System.out.println("This trap is not even functioning...");
         }
     }
 
     public void leaveTile(Player x)
     {
         occupant = null;
+        contain = "█　";
     }
 
     @Override

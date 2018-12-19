@@ -2,12 +2,11 @@ package Items;
 
 import Player.Player;
 
-public class Potion implements Items
+public class Spork implements Items
 {
     @Override
     public void use(Player x)
     {
-        x.poison(false);
-        x.isPoison();
+        x.atk(1);
     }
 }
