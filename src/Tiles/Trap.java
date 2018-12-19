@@ -56,7 +56,7 @@ public class Trap extends Tile
                 }
                 else
                 {
-                    System.out.println("Unlucky. | hp -50");
+                    System.out.println("You failed. | hp -50");
                     x.hp(-50);
                 }
             }

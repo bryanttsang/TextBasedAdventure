@@ -13,9 +13,12 @@ public class Ambush extends Tile
     @Override
     public void enterTile(Player x)
     {
+        occupant = x;
+        x.setxLoc(this.xLoc);
+        x.setyLoc(this.yLoc);
         System.out.println("Ambush!");
-        x.hp(-20);
         System.out.println("You got hurt but you gained battle experience! | hp -20 | atk +20");
+        x.hp(-20);
         x.atk(20);
     }
 

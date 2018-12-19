@@ -43,44 +43,39 @@ public class Runner {
 
     private static boolean gameOn = true;
 
+    public static int bossHp;
+    public static int bossAtk;
+    public static int playerHp;
+    public static int playerAtk;
+    public static int playerPoison;
+    public static String playerName;
+
     public static void main(String[] sendHelp)
     {
         //random boss tile
         randomXY();
         map[y][x] = new Boss(x, y);
 
-        //random teleport tiles n times
+        //random teleport and trap tiles n times
         int n = 0;
         for (int i = 0; i < map.length * map[0].length; i++)
         {
-            //5% teleport tile spawn rate
-            int r = (int)(Math.random() * 100);
-            if (r < 5)
+            //7.5% teleport and trap tile spawn rate
+            int r = (int)(Math.random() * 200);
+            if (r < 15)
             {
                 n++;
             }
         }
+        int t;
         for (; n > 0; n--)
         {
             newTile();
-            map[y][x] = new Teleport(x, y);
-        }
-
-        //random trap tiles n times
-        n = 0;
-        for (int i = 0; i < map.length * map[0].length; i++)
-        {
-            //5% item spawn rate
-            int r = (int)(Math.random() * 100);
-            if (r < 5)
-            {
-                n++;
-            }
-        }
-        for (; n > 0; n--)
-        {
-            newTile();
-            map[y][x] = new Trap(x, y);
+            t = (int)(Math.random() * 5);
+            //3% trap tile spawn rate
+            if (t == 0 || t == 1) { map[y][x] = new Trap(x, y); }
+            //4.5% teleport tile spawn rate
+            if (t == 2 || t == 3 || t == 4) { map[y][x] = new Teleport(x, y); }
         }
 
         //random item tiles n times
@@ -111,6 +106,23 @@ public class Runner {
             if (r == 10 || r == 11 || r == 12 || r == 13 || r == 14) { map[y][x] = new SporkTile(x, y); }
         }
 
+        //random ambush tiles n times
+        n = 0;
+        for (int i = 0; i < map.length * map[0].length; i++)
+        {
+            //10% ambush tile spawn rate
+            r = (int)(Math.random() * 100);
+            if (r < 10)
+            {
+                n++;
+            }
+        }
+        for (; n > 0; n--)
+        {
+            newTile();
+            map[y][x] = new Ambush(x, y);
+        }
+
         //setup player1
         System.out.println("Thanks for downloading my game! What's your name? (You may enter nothing to play anonymously.)");
         Scanner in = new Scanner(System.in);
@@ -122,11 +134,11 @@ public class Runner {
         Player player1;
         if (name.equals(""))
         {
-            player1 = new Player(xLoc, yLoc, 100, 0, false);
+            player1 = new Player(xLoc, yLoc, 100, 5, false);
         }
         else
         {
-            player1 = new Player(name, xLoc, yLoc, 100, 0, false);
+            player1 = new Player(name, xLoc, yLoc, 100, 5, false);
         }
         System.out.println("And your gender? (M/F) Enter nothing for others.");
         in = new Scanner(System.in);
@@ -207,13 +219,51 @@ public class Runner {
                 System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
                 System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
                 System.out.println("Where would you like to move? (Choose W/A/S/D)");
+                if (player1.isPoison().equals("true"))
+                {
+                    player1.poison(true);
+                    playerPoison = 1;
+                }
+                if (player1.isPoison().equals("false")) { playerPoison = 0; }
+                bossHp = player1.getHp() - 15 + (int)(Math.random() * 31);
+                bossAtk = player1.getAtk() - 10 + (int)(Math.random() * 21);
+                if (bossAtk < 1)
+                {
+                    while (bossAtk < 1)
+                    {
+                        bossAtk = player1.getAtk() - 10 + (int)(Math.random() * 21);
+                    }
+                }
+                playerHp = player1.getHp();
+                playerAtk = player1.getAtk();
+                if (player1.getHp() <= 0)
+                {
+                    if (name.equals(""))
+                    {
+                        turn++;
+                        Board.print();
+                        System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
+                        System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
+                        System.out.println("You died.");
+                        Runner.gameOff();
+                        break;
+                    }
+                    if (!name.equals(""))
+                    {
+                        turn++;
+                        Board.print();
+                        System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
+                        System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
+                        System.out.println(player1.getName() + " died.");
+                        Runner.gameOff();
+                        break;
+                    }
+                }
             }
             else
             {
                 System.out.println("Please choose a valid move");
             }
-            //Runner.gameOff();
-            //break;
         }
         in.close();
     }
@@ -283,7 +333,4 @@ public class Runner {
     {
         gameOn = false;
     }
-
-
-
 }
