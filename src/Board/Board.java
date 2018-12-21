@@ -2,6 +2,9 @@ package Board;
 
 import Tiles.Tile;
 
+/**
+ * creates game board
+ */
 public class Board {
 
     private Tile[][] board;
@@ -22,6 +25,5 @@ public class Board {
             }
             System.out.println(row);
         }
-
     }
 }

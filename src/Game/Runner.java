@@ -12,13 +12,14 @@ public class Runner {
     private static int x = (int)(Math.random() * 6) + 5;
     private static int y = (int)(Math.random() * 6) + 5;
 
+    //random sized game board
     private static Tile[][] map = new Tile[y][x];
 
-    public static int randomX()
+    private static int randomX()
     {
         return (int)(Math.random() * map[0].length);
     }
-    public static int randomY()
+    private static int randomY()
     {
         return (int)(Math.random() * map.length);
     }
@@ -29,6 +30,9 @@ public class Runner {
         y = randomY();
     }
 
+    /**
+     * helper method generating random coordinate for new tile
+     */
     private static void newTile()
     {
         randomXY();
@@ -43,12 +47,13 @@ public class Runner {
 
     private static boolean gameOn = true;
 
+    //player and boss stats
     public static int bossHp;
     public static int bossAtk;
     public static int playerHp;
     public static int playerAtk;
     public static int playerPoison;
-    public static String playerName;
+    public static int playerTurn;
 
     public static void main(String[] sendHelp)
     {
@@ -56,35 +61,33 @@ public class Runner {
         randomXY();
         map[y][x] = new Boss(x, y);
 
-        //random teleport and trap tiles n times
+        //random trap tiles n times
         int n = 0;
         for (int i = 0; i < map.length * map[0].length; i++)
         {
-            //7.5% teleport and trap tile spawn rate
-            int r = (int)(Math.random() * 200);
-            if (r < 15)
+            //5% treasure and trap tile spawn rate
+            int r = (int)(Math.random() * 20);
+            if (r == 0)
             {
                 n++;
             }
         }
-        int t;
+        int t = (int)(Math.random() * 4);
+        //25% treasure tile spawn rate
+        if (t == 0) { newTile(); map[y][x] = new TreasureTile(x, y); n--; }
         for (; n > 0; n--)
         {
             newTile();
-            t = (int)(Math.random() * 5);
-            //3% trap tile spawn rate
-            if (t == 0 || t == 1) { map[y][x] = new Trap(x, y); }
-            //4.5% teleport tile spawn rate
-            if (t == 2 || t == 3 || t == 4) { map[y][x] = new Teleport(x, y); }
+            map[y][x] = new Trap(x, y);
         }
 
         //random item tiles n times
         n = 0;
         for (int i = 0; i < map.length * map[0].length; i++)
         {
-            //15% item tile spawn rate
-            int r = (int)(Math.random() * 100);
-            if (r < 15)
+            //20% item tile spawn rate
+            int r = (int)(Math.random() * 5);
+            if (r == 0)
             {
                 n++;
             }
@@ -123,8 +126,16 @@ public class Runner {
             map[y][x] = new Ambush(x, y);
         }
 
+        //game intro
+        System.out.println("Welcome to Disboard! The outcome of your life will be decided here.");
+        System.out.println("This board has different kind of tiles that you can explore to modify your personal stats (hp and atk).");
+        System.out.println("Ｘ is you.　？ is an item tile.　Ｂ is the boss tile.　And Ｔ tiles are interesting tiles for you to explore.");
+        System.out.println("Keep in mind that while you are moving around to get stronger, the boss is also getting stronger.");
+        System.out.println("Let's begin!");
+        System.out.println("");
+
         //setup player1
-        System.out.println("Thanks for downloading my game! What's your name? (You may enter nothing to play anonymously.)");
+        System.out.println("What's your name? (You may enter nothing to play anonymously.)");
         Scanner in = new Scanner(System.in);
         String input = in.nextLine().toLowerCase().trim();
         String name = input;
@@ -140,7 +151,9 @@ public class Runner {
         {
             player1 = new Player(name, xLoc, yLoc, 100, 5, false);
         }
-        System.out.println("And your gender? (M/F) Enter nothing for others.");
+
+        //gender for exposition
+        System.out.println("And your gender? (M/F) You may enter nothing.");
         in = new Scanner(System.in);
         input = in.nextLine().toLowerCase().trim();
         String gender = input;
@@ -205,16 +218,27 @@ public class Runner {
 
         //gameplay
         int turn = 1;
+        playerTurn = turn;
         Board.print();
         System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
         System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
         System.out.println("Where would you like to move? (Choose W/A/S/D)");
+        playerHp = player1.getHp();
+        playerAtk = player1.getAtk();
+        bossHp = 100;
+        bossAtk = 5;
         while(gameOn)
         {
             String move = in.nextLine();
-            if(validMove(move, player1, map))
+            if (validMove(move, player1, map))
             {
+                if (Boss.rbossHp <= 0 || Boss.rplayerHp <= 0) { break; }
                 turn++;
+                playerTurn = turn;
+                //boss hp +5 every turn
+                bossHp += 5;
+                //boss atk +5 every turn
+                bossAtk += 5;
                 Board.print();
                 System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
                 System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
@@ -225,55 +249,31 @@ public class Runner {
                     playerPoison = 1;
                 }
                 if (player1.isPoison().equals("false")) { playerPoison = 0; }
-                bossHp = player1.getHp() - 15 + (int)(Math.random() * 31);
-                bossAtk = player1.getAtk() - 10 + (int)(Math.random() * 21);
-                if (bossAtk < 1)
-                {
-                    while (bossAtk < 1)
-                    {
-                        bossAtk = player1.getAtk() - 10 + (int)(Math.random() * 21);
-                    }
-                }
                 playerHp = player1.getHp();
                 playerAtk = player1.getAtk();
                 if (player1.getHp() <= 0)
                 {
-                    if (name.equals(""))
-                    {
-                        turn++;
-                        Board.print();
-                        System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
-                        System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
-                        System.out.println("You died.");
-                        Runner.gameOff();
-                        break;
-                    }
-                    if (!name.equals(""))
-                    {
-                        turn++;
-                        Board.print();
-                        System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
-                        System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
-                        System.out.println(player1.getName() + " died.");
-                        Runner.gameOff();
-                        break;
-                    }
+                    turn++;
+                    Board.print();
+                    System.out.println("Your coordinates: (" + (player1.getxLoc() + 1) + ", " + (player1.getyLoc() + 1) + ")");
+                    System.out.println("turn: " + turn + " | hp: " + player1.getHp() + " | atk: " + player1.getAtk() + " | poison: " + player1.isPoison());
+                    System.out.println("");
+                    System.out.println("You died on turn " + turn + ".");
+                    Runner.gameOff();
+                    break;
                 }
             }
-            else
-            {
-                System.out.println("Please choose a valid move");
-            }
+            else { System.out.println("Please enter a valid move."); }
         }
         in.close();
     }
 
     /**
-     * Checks that the movement chosen is within the valid game map.
-     * @param move the move chosen
-     * @param player person moving
-     * @param map the 2D array of tiles
-     * @return
+     *
+     * @param move W/A/S/D
+     * @param player moving
+     * @param map of tiles
+     * @return true if move is allowed, false if not
      */
     private static boolean validMove(String move, Player player, Tile[][] map)
     {
@@ -329,6 +329,9 @@ public class Runner {
         return false;
     }
 
+    /**
+     * trigger end of game
+     */
     public static void gameOff()
     {
         gameOn = false;

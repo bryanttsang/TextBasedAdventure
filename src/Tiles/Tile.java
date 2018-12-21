@@ -14,8 +14,8 @@ public class Tile
     }
 
     /**
-     * Method controls the results when a person enters this room.
-     * @param x the Player entering
+     * player enters tile
+     * @param x the player entering
      */
     public void enterTile(Player x)
     {
@@ -25,14 +25,18 @@ public class Tile
     }
 
     /**
-     * Removes the player from the room.
-     * @param x
+     * player leaves tile
+     * @param x the player leaving
      */
     public void leaveTile(Player x)
     {
         occupant = null;
     }
 
+    /**
+     * normal tile
+     * @return tile on board
+     */
     @Override
     public String toString()
     {

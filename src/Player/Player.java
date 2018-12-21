@@ -1,9 +1,11 @@
 package Player;
 
 /**
- * Person represents the player as they move through the game.
+ * player of this game
  */
-public class Player {
+public class Player
+{
+
     public String name;
     public int xLoc;
     public int yLoc;
@@ -20,7 +22,6 @@ public class Player {
         this.atk = atk;
         this.poison = poison;
     }
-
     public Player (int xLoc, int yLoc, int hp, int atk, boolean poison)
     {
         this.xLoc = xLoc;
